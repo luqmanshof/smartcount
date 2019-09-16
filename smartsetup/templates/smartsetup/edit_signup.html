@@ -19,7 +19,9 @@
               <!-- <h2>Login</h2> -->
               <form method="post">
                 {% csrf_token %}
-                {% for field in form %}
+                {{ form|crispy }}
+                {{ userprofile_form|crispy }}
+                <!-- {% for field in form %}
                   <p>
                     {{ field|as_crispy_field }}
 
@@ -27,9 +29,18 @@
                       <p style="color: red">{{ error }}</p>
                     {% endfor %}
                   </p>
-                {% endfor %}
+                {% endfor %} -->
                 <button type="submit">Save</button>
               </form>
+
+              <!-- <div class="">
+                <h4>Others</h4>
+                {% for userprofile in userprofiles %}
+                <p>{{ userprofile.description }}</p>
+
+                {% endfor %}
+
+              </div> -->
 
             </div>
         </div>

@@ -1,7 +1,8 @@
 from django.shortcuts import render,redirect
 from smartsetup.forms import (
     SignUpForm,
-    EditProfileForm
+    EditProfileForm,
+    UserProfileForm
 )
 from django.contrib.auth import authenticate,login
 from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
@@ -34,17 +35,20 @@ def list_signup(request):
 def edit_signup(request):
     if request.method == 'POST':
         form = EditProfileForm(request.POST, instance=request.user)
+        userprofile_form = UserProfileForm(request.POST, instance=request.user.userprofile)
 
-        if form.is_valid():
+        if form.is_valid() and userprofile_form.is_valid():
             form.save()
+            userprofile_form.save()
             # return redirect('home')
             users = User.objects
             return render(request, 'smartsetup/list_signup.html',{'users':users})
 
     else:
         form = EditProfileForm(instance=request.user)
-        userprofiles = UserProfile.objects.all()
-        args = {'form':form,'userprofiles':userprofiles}
+        userprofile_form = UserProfileForm(instance=request.user.userprofile)
+
+        args = {'form':form,'userprofile_form':userprofile_form}
         return render(request,'smartsetup/edit_signup.html',args)
 
 # def change_password(request):
