@@ -5,7 +5,7 @@
 {% block content %}
 <section class="content-header">
   <h1>
-    Create User Account
+    {{ title }}
     <small>...</small>
   </h1>
   <br/>
@@ -15,15 +15,11 @@
 <div class="box box-primary">
     <form method="post">
         <div class="box-body" style="padding-top:15px">
+            <div class="col-md-6">
               <!-- <h2>Login</h2> -->
               <form method="post">
                 {% csrf_token %}
-                <div class="col-md-6">
-                  {{ form|crispy }}
-                </div>
-                <div class="col-md-6">
-                  {{ userprofile_form|crispy }}
-                </div>
+                {{ form|crispy }}
                 <!-- {% for field in form %}
                   <p>
                     {{ field|as_crispy_field }}
@@ -33,13 +29,10 @@
                     {% endfor %}
                   </p>
                 {% endfor %} -->
-                <div class="col-md-12">
-                  <button type="submit"  class="btn btn-primary">Create Account</button>                  
-                </div>
+                <button type="submit">Update</button>
               </form>
 
-
-
+            </div>
         </div>
 </div>
 {% endblock %}

@@ -148,11 +148,11 @@
 
                             <ul class="sidebar-menu" data-widget="tree">
                                 <li class="header">MAIN NAVIGATION</li>
-                                <li><a href="{% url 'dashboard' %}"><i class="fa fa-dashboard text-light-blue"></i> Dashboard</a></li>
+                                <li><a href="{% url 'dashboard' %}"><i class="fa fa-dashboard text-light-blue"></i><span>Dashboard</span></a></li>
                                 {% if user.is_authenticated %}
                                   <li class="treeview">
                                       <a href="#">
-                                          <i class="fa fa-gears text-gray"></i>Admin Module
+                                          <i class="fa fa-gears text-gray"></i><span>Admin Module</span>
                                           <span class="pull-right-container">
                                               <i class="fa fa-angle-left pull-right"></i>
                                           </span>
@@ -161,14 +161,14 @@
                                           <!-- <li><a href="{% url 'edit_signup' %}"><i class="fa fa-gears text-gray"></i> Edit Personal Profile</a></li> -->
                                           <li class="treeview">
                                               <a href="#">
-                                                  <i class="fa fa-gears text-gray"></i> Personal Profile
+                                                  <i class="fa fa-gears text-gray"></i> Update Profile
                                                   <span class="pull-right-container">
                                                       <i class="fa fa-angle-left pull-right"></i>
                                                   </span>
                                               </a>
                                               <ul class="treeview-menu">
-                                                  <li><a href="{% url 'edit_signup' %}"><i class="fa fa-gears text-gray"></i> Edit Personal Profile</a></li>
-                                                  <li><a href="{% url 'password_change' %}"><i class="fa fa-gears text-gray"></i> Change Password</a></li>
+                                                  <li><a href="{% url 'edit_signup' %}"><i class="fa fa-gears text-gray"></i> Edit Profile Details</a></li>
+                                                  <li><a href="{% url 'password' %}"><i class="fa fa-gears text-gray"></i> Change Password</a></li>
                                               </ul>
                                           </li>
 
@@ -183,14 +183,14 @@
                                                   <li><a href="{% url 'signup' %}"><i class="fa fa-gears text-gray"></i> Create User Account</a></li>
                                                   <li><a href="{% url 'list_signup' %}"><i class="fa fa-gears text-gray"></i> View User Account</a></li>
                                                   <!-- @*<li><a href="@Url.Action("Index","SetupBizClasses", new { area = "AppSetup" })"><i class="fa fa-gears text-gray"></i> Setup Roles</a></li>*@ -->
-                                                  <li><a href="#"><i class="fa fa-gears text-gray"></i> Manage User Roles</a></li>
+                                                  <li><a href="{% url 'admin:index' %}"><i class="fa fa-gears text-gray"></i> Manage User Roles</a></li>
                                               </ul>
                                           </li>
                                       </ul>
                                   </li>
                                   <li class="treeview">
                                       <a href="#">
-                                          <i class="fa fa-codepen text-fuchsia"></i>Application Setup
+                                          <i class="fa fa-codepen text-fuchsia"></i><span>Application Setup</span>
                                           <span class="pull-right-container">
                                               <i class="fa fa-angle-left pull-right"></i>
                                           </span>
@@ -221,8 +221,8 @@
                                                   </span>
                                               </a>
                                               <ul class="treeview-menu">
-                                                  <li><a href="#"><i class="fa fa-codepen text-fuchsia"></i> Account Category</a></li>
-                                                  <li><a href="#"><i class="fa fa-codepen text-fuchsia"></i> Account Items</a></li>
+                                                  <li><a href="{% url 'list_chartcategory' %}"><i class="fa fa-codepen text-fuchsia"></i> Account Category</a></li>
+                                                  <li><a href="{% url 'list_chartsubcategory' %}"><i class="fa fa-codepen text-fuchsia"></i> Account Items</a></li>
                                               </ul>
                                           </li>
 
@@ -370,16 +370,11 @@
                                       </a>
 
                                       <ul class="treeview-menu">
-                                          <li><a href="#"><i class="fa fa-edit text-blue"></i> <span>Premium Income Schedule</span></a></li>
-                                          <li><a href="#"><i class="fa fa-edit text-blue"></i> <span>CRR Schedule</span></a></li>
-                                          <li><a href="#"><i class="fa fa-edit text-blue"></i> <span>Return Premium </span></a></li>
-                                          <li><a href="#"><i class="fa fa-edit text-blue"></i> <span>Client Account</span></a></li>
-                                          <li><a href="#"><i class="fa fa-edit text-blue"></i> <span>AML/CFT Report</span></a></li>
-                                          <li><a href="#"><i class="fa fa-edit text-blue"></i> <span>Form 1C Analysis</span></a></li>
-                                          <li><a href="#"><i class="fa fa-edit text-blue"></i> <span>Monthly Schedule</span></a></li>
-                                          <li><a href="#"><i class="fa fa-edit text-blue"></i> <span>Client Acct. Movt.</span></a></li>
-                                          <li><a href="#"><i class="fa fa-edit text-blue"></i> <span>Unremitted Premium</span></a></li>
-
+                                          <li><a href="{% url 'financialperformance' %}"><i class="fa fa-edit text-blue"></i> <span>Financial Performance</span></a></li>
+                                          <li><a href="{% url 'financialposition' %}"><i class="fa fa-edit text-blue"></i> <span>Financial Position</span></a></li>
+                                          <li><a href="#"><i class="fa fa-edit text-blue"></i> <span>Changes In Net Asset</span></a></li>
+                                          <li><a href="#"><i class="fa fa-edit text-blue"></i> <span>Cash Flow Statement</span></a></li>
+                                          <li><a href="#"><i class="fa fa-edit text-blue"></i> <span>Notes To Account</span></a></li>
                                       </ul>
                                   </li>
 

@@ -1,15 +1,12 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
-from smartsetup.models import UserProfile
+from smartsetup.models import (UserProfile,ChartCategory,ChartSubCategory)
+from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 class UserProfileForm(forms.ModelForm):
-    # description  = forms.CharField(blank=True,max_length=100, default='')
-    # city = forms.CharField(max_length=100, default='')
-    # website = forms.URLField(default='')
-    # phone =   forms.PhoneField(blank=True, help_text='Contact phone number')
-    # image = models.ImageField(upload_to='images/profilepix/', blank=True)
-    # signature = models.ImageField(upload_to='images/signature/', blank=True)
+    # image = forms.ImageField(required=False)
+    # signature = forms.ImageField(required=False)
 
     class Meta:
         model = UserProfile
@@ -30,24 +27,24 @@ class SignUpForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = (
-            'username',
-            'email',
-            'first_name',
-            'last_name',
-            'password1',
-            'password2',
-        )
+        fields = ('username','email','first_name','last_name','password1','password2',)
 
 class EditProfileForm(UserChangeForm):
+    password = ReadOnlyPasswordHashField(label= ("Password"),
+    help_text= ("Raw passwords are not stored, so there is no way to see "
+                "this user's password, but you can change the password "
+                "using <a href=\"password\">this form</a>."))
     class Meta:
         model = User
-
-        # def get_queryset(self):
-        #     return User.objects.select_related()
         # exclude = () this can be used to specify fields to exclude'
-        fields = (
-            'email',
-            'first_name',
-            'last_name',
-        )
+        fields = ('email','first_name','last_name',)
+
+class ChartCategoryForm(forms.ModelForm):
+    class Meta:
+        model = ChartCategory
+        fields = ('category_code','category_name')
+
+class ChartSubCategoryForm(forms.ModelForm):
+    class Meta:
+        model = ChartSubCategory
+        fields = ('category_code','sub_category_code','sub_category_name','notes')

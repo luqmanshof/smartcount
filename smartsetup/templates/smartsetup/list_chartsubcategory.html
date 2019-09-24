@@ -10,13 +10,13 @@
           <div class="nav-tabs-custom">
               <!-- Tabs within a box -->
               <ul class="nav nav-tabs pull-right">
-                  <li class="pull-left header"><i class="fa fa-address-card"></i> List Registered Users</li>
+                  <li class="pull-left header"><i class="fa fa-address-card"></i> List Chart of Account </li>
               </ul>
           </div>
 
       </div>
       <div class="col-xs-2">
-            <a href="{% url 'signup' %}"><button type="button" class = "btn btn-primary btn-md">New User</button></a>
+            <a href="{% url 'chartsubcategory' %}"><button type="button" class = "btn btn-primary btn-md">New Account</button></a>
       </div>
   </div>
 
@@ -37,38 +37,30 @@
                           <th>Event/Actions</th>
                       </tr>
 
-                        <!-- <tr>
-                            <th>UserName</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>E-Mail</th>
-                            <th>Event/Actions</th>
-                        </tr> -->
                     </thead>
                     <tbody>
-                      {% for user in users.all %}
+                      {% for cat in chartcategories.all %}
                             <tr>
                                 <td>
-                                    {{ user.username }}
+                                    {{ cat.sub_category_code }}
                                 </td>
                                 <td>
-                                    {{ user.first_name }}
+                                    {{ cat.sub_category_name }}
                                 </td>
                                 <td>
-                                    {{ user.last_name }}
+                                    {{ cat.notes }}
                                 </td>
                                 <td>
-                                    {{ user.email }}
+                                    {{ cat.category_code }}
                                 </td>
                                 <td style="text-align:left">
-                                  <a href="{% url 'edit_signup_with_pk' pk=user.pk %}" class = "fa fa-edit text-green"> Edit</a> |
                                   <a href="#" class = "fa fa-trash text-red" > Delete</a>
                                 </td>
                             </tr>
                         {% endfor %}
 
                     </tbody>
-                    <tfoot>
+                    <!-- <tfoot>
                         <tr>
                           {% for fieldCol in fieldCols %}
                             <th>{{ fieldCol }}</th>
@@ -76,7 +68,7 @@
                           <th>Event/Actions</th>
                         </tr>
 
-                    </tfoot>
+                    </tfoot> -->
                 </table>
             </div>
             <!-- /.box-body -->
