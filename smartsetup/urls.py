@@ -27,12 +27,22 @@ urlpatterns = [
     path('logout',auth_views.LogoutView.as_view(),name='logout'),
 
 
-    path('list_chartcategory',views.list_chartcategory,name='list_chartcategory'),
-    path('chartcategory',views.chartcategory,name='chartcategory'),
-    # path('chartcategory_with_pk/<pk>/',views.chartcategory_with_pk,name='chartcategory_with_pk'),
+    path('chartcategory_list',views.chartcategory_list,name='chartcategory_list'),
+    path('chartcategory/(<int:pk>)',views.chartcategory,name='chartcategory'),
+    path('chartcategory/(<int:pk>)/detail',views.ChartCategoryDetail.as_view(),name='chartcategory_detail'),
+    path('chartcategory/(<int:pk>)/delete',views.ChartCategoryDelete.as_view(),name='chartcategory_delete'),
 
-    path('list_chartsubcategory',views.list_chartsubcategory,name='list_chartsubcategory'),
-    path('chartsubcategory',views.chartsubcategory,name='chartsubcategory'),
+    path('chartsubcategory_list',views.chartsubcategory_list,name='chartsubcategory_list'),
+    # path('chartsubcategory',views.chartsubcategory,name='chartsubcategory'),
+    path('chartsubcategory/(<int:pk>)',views.chartsubcategory,name='chartsubcategory'),
+    path('chartsubcategory/(<int:pk>)/detail',views.ChartSubCategoryDetail.as_view(),name='chartsubcategory_detail'),
+    path('chartsubcategory/(<int:pk>)/delete',views.ChartSubCategoryDelete.as_view(),name='chartsubcategory_delete'),
+
+    path('setupinventorycategory_list',views.setupinventorycat_list,name='setupinventorycategory_list'),
+    path('setupinventorycategory/create',views.SetupInventoryCat.as_view(),name='setupinventorycat_create'),
+    path('setupinventorycategory/(<int:pk>)/update',views.SetupInventoryCatUpdate.as_view(),name='setupinventorycat_update'),
+    path('setupinventorycategory/(<int:pk>)/detail',views.SetupInventoryCatDetail.as_view(),name='setupinventorycat_detail'),
+    path('setupinventorycategory/(<int:pk>)/delete',views.SetupInventoryCatDelete.as_view(),name='setupinventorycat_delete'),
 
     # Reports
     path('financialperformance',views.financialperformance,name='financialperformance'),

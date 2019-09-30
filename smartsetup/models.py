@@ -34,9 +34,42 @@ class ChartSubCategory(models.Model):
     def __str__(self):
         return self.sub_category_name
 
+class SetupClients(models.Model):
+    client_name = models.CharField(max_length=256)
+    address = models.TextField()
+    city = models.CharField(max_length=100, default='')
+    website = models.URLField(default='')
+    phone = PhoneField(blank=True, help_text='Contact phone number')
 
+    def __str__(self):
+        return self.client_name
 
+class SetupVendors(models.Model):
+    vendor_name = models.CharField(max_length=256)
+    address = models.TextField()
+    city = models.CharField(max_length=100, default='')
+    website = models.URLField(default='')
+    phone = PhoneField(blank=True, help_text='Contact phone number')
 
+    def __str__(self):
+        return self.vendor_name
+
+class SetupInventoryCategory(models.Model):
+    inventory_category_code = models.PositiveSmallIntegerField(blank=True)
+    inventory_category_name = models.CharField(max_length=256)
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.inventory_category_name
+
+class SetupInventoryItems(models.Model):
+    inventory_code = models.CharField(max_length=256, default='',blank=True)
+    inventory_name = models.CharField(max_length=256)
+    description = models.TextField(blank=True)
+    inventory_category_code = models.ForeignKey(SetupInventoryCategory, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.inventory_name
 
 # @receiver(post_save, sender=User)
 # def create_user_profile(sender, instance, created, **kwargs):

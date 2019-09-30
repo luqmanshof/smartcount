@@ -197,7 +197,7 @@
                                       </a>
                                       <ul class="treeview-menu">
                                           <!-- @*<li><a href="#"><i class="fa fa-codepen text-fuchsia"></i> Manage User Account</a></li>*@ -->
-                                          <li><a href="#"><i class="fa fa-codepen text-fuchsia"></i> Customers</a></li>
+                                          <li><a href="#"><i class="fa fa-codepen text-fuchsia"></i> Clients</a></li>
                                           <li><a href="#"><i class="fa fa-codepen text-fuchsia"></i> Vendors</a></li>
                                           <!-- @*<li><a href="@Url.Action("Index","SetupInsuranceClasses", new { area = "AppSetup" })"><i class="fa fa-codepen text-fuchsia"></i> Insurance Class</a></li>*@ -->
                                           <li class="treeview">
@@ -208,7 +208,7 @@
                                                   </span>
                                               </a>
                                               <ul class="treeview-menu">
-                                                  <li><a href="#"><i class="fa fa-codepen text-fuchsia"></i> Inventory Category</a></li>
+                                                  <li><a href="{% url 'setupinventorycategory_list' %}"><i class="fa fa-codepen text-fuchsia"></i> Inventory Category</a></li>
                                                   <li><a href="#"><i class="fa fa-codepen text-fuchsia"></i> Inventory Items</a></li>
                                               </ul>
                                           </li>
@@ -221,8 +221,8 @@
                                                   </span>
                                               </a>
                                               <ul class="treeview-menu">
-                                                  <li><a href="{% url 'list_chartcategory' %}"><i class="fa fa-codepen text-fuchsia"></i> Account Category</a></li>
-                                                  <li><a href="{% url 'list_chartsubcategory' %}"><i class="fa fa-codepen text-fuchsia"></i> Account Items</a></li>
+                                                  <li><a href="{% url 'chartcategory_list' %}"><i class="fa fa-codepen text-fuchsia"></i> Account Category</a></li>
+                                                  <li><a href="{% url 'chartsubcategory_list' %}"><i class="fa fa-codepen text-fuchsia"></i> Account Items</a></li>
                                               </ul>
                                           </li>
 

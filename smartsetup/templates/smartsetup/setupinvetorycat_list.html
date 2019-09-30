@@ -10,13 +10,13 @@
           <div class="nav-tabs-custom">
               <!-- Tabs within a box -->
               <ul class="nav nav-tabs pull-right">
-                  <li class="pull-left header"><i class="fa fa-address-card"></i> List Account Category</li>
+                  <li class="pull-left header"><i class="fa fa-address-card"></i> List Inventory Category</li>
               </ul>
           </div>
 
       </div>
       <div class="col-xs-2">
-            <a href="{% url 'chartcategory' %}"><button type="button" class = "btn btn-primary btn-md">New Category</button></a>
+            <a href="{% url 'setupinventorycat_create' %}"><button type="button" class = "btn btn-primary btn-md">New Category</button></a>
       </div>
   </div>
 
@@ -39,16 +39,18 @@
 
                     </thead>
                     <tbody>
-                      {% for cat in chartcategories.all %}
+                      {% for cat in setupinventorycategory.all %}
                             <tr>
                                 <td>
-                                    {{ cat.category_code }}
+                                    {{ cat.inventory_category_code }}
                                 </td>
                                 <td>
-                                    {{ cat.category_name }}
+                                    {{ cat.inventory_category_name }}
                                 </td>
                                 <td style="text-align:left">
-                                  <a href="#" class = "fa fa-trash text-red" > Delete</a>
+                                  <a href="{% url 'setupinventorycat_update' cat.pk %}" class = "fa fa-edit text-green"> Edit</a> |
+                                  <a href="{% url 'setupinventorycat_detail' cat.pk %}" class = "fa fa-eye text-blue"> View</a> |
+                                  <a href="{% url 'setupinventorycat_delete' cat.pk %}" class = "fa fa-trash text-red" > Delete</a>
                                 </td>
                             </tr>
                         {% endfor %}

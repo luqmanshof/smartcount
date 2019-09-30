@@ -10,13 +10,13 @@
           <div class="nav-tabs-custom">
               <!-- Tabs within a box -->
               <ul class="nav nav-tabs pull-right">
-                  <li class="pull-left header"><i class="fa fa-address-card"></i> List Chart of Account </li>
+                  <li class="pull-left header"><i class="fa fa-address-card"></i> List Account Category</li>
               </ul>
           </div>
 
       </div>
       <div class="col-xs-2">
-            <a href="{% url 'chartsubcategory' %}"><button type="button" class = "btn btn-primary btn-md">New Account</button></a>
+            <a href="{% url 'chartcategory' pk=0 %}"><button type="button" class = "btn btn-primary btn-md">New Category</button></a>
       </div>
   </div>
 
@@ -42,19 +42,15 @@
                       {% for cat in chartcategories.all %}
                             <tr>
                                 <td>
-                                    {{ cat.sub_category_code }}
-                                </td>
-                                <td>
-                                    {{ cat.sub_category_name }}
-                                </td>
-                                <td>
-                                    {{ cat.notes }}
-                                </td>
-                                <td>
                                     {{ cat.category_code }}
                                 </td>
+                                <td>
+                                    {{ cat.category_name }}
+                                </td>
                                 <td style="text-align:left">
-                                  <a href="#" class = "fa fa-trash text-red" > Delete</a>
+                                  <a href="{% url 'chartcategory' pk=cat.pk %}" class = "fa fa-edit text-green"> Edit</a> |
+                                  <a href="{% url 'chartcategory_detail' pk=cat.pk %}" class = "fa fa-eye text-blue"> View</a> |
+                                  <a href="{% url 'chartcategory_delete' pk=cat.pk %}" class = "fa fa-trash text-red" > Delete</a>
                                 </td>
                             </tr>
                         {% endfor %}

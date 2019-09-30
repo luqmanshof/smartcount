@@ -1,5 +1,14 @@
 {% extends 'smartapp/base.html' %}
-
 {% block content %}
-This is home Page!
+<section class="jumbotron text-center">
+  <div class="container">
+    <h1 class="jumbotron-heading">SmartCount Software</h1>
+    <p class="lead text-muted">...the best Solution to meet your accounting needs</p>
+    <p>
+      <a href="{% url 'login' %}" class="btn btn-primary">Sign-In</a>
+    </p>
+  </div>
+
+</section>
+
 {% endblock %}
