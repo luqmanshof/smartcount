@@ -15,7 +15,7 @@
     <div class="col-xs-12">
       <h2 class="page-header">
         <i class="fa fa-globe"></i> <b>Consolidated Statement of Financial Position</b>
-        <small class="pull-right">Date: 19/09/2019</small>
+        <small class="pull-right"><p id="date">Date: </p></small>
       </h2>
     </div>
     <!-- /.col -->
@@ -255,5 +255,12 @@
 <!-- /.content -->
 <div class="clearfix"></div>
 
+<script type="text/javascript">
+  n =  new Date();
+  y = n.getFullYear();
+  m = n.getMonth() + 1;
+  d = n.getDate();
+  document.getElementById("date").innerHTML = m + "/" + d + "/" + y;
+</script>
 
 {% endblock %}

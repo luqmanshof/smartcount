@@ -3,8 +3,9 @@ from django.contrib.auth.models import User
 from phone_field import PhoneField
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils import timezone
 
-# Create your models here.
+# SETUP MODELS
 class UserProfile(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE)
     job_description  = models.CharField(blank=True,max_length=100, default='')
@@ -37,9 +38,10 @@ class ChartSubCategory(models.Model):
 class SetupClients(models.Model):
     client_name = models.CharField(max_length=256)
     address = models.TextField()
-    city = models.CharField(max_length=100, default='')
-    website = models.URLField(default='')
+    city = models.CharField(max_length=100, default='',blank=True)
+    website = models.URLField(default='',blank=True)
     phone = PhoneField(blank=True, help_text='Contact phone number')
+    account_officer = models.ForeignKey(User,on_delete=models.CASCADE,blank=True,default='')
 
     def __str__(self):
         return self.client_name
@@ -66,10 +68,43 @@ class SetupInventoryItems(models.Model):
     inventory_code = models.CharField(max_length=256, default='',blank=True)
     inventory_name = models.CharField(max_length=256)
     description = models.TextField(blank=True)
-    inventory_category_code = models.ForeignKey(SetupInventoryCategory, on_delete=models.CASCADE)
+    inventory_category_code = models.ForeignKey(SetupInventoryCategory, on_delete=models.CASCADE, verbose_name='Inventory Category')
 
     def __str__(self):
         return self.inventory_name
+
+# ACCOUNT MODELS
+
+PAYMENT_MODES = (
+    ('cash','Cash'),
+    ('cheque','Cheque'),
+    ('transfer','Transfer'),
+    ('draft','Draft'),
+)
+
+class ReceiptMain(models.Model):
+    date = models.DateTimeField(default=timezone.now, blank=True)
+    receipt_number = models.PositiveIntegerField(default=100)
+    client = models.ForeignKey(SetupClients, on_delete=models.SET_NULL, null=True, blank=True, verbose_name= 'Client Name')
+    bill_to = models.CharField(max_length=256, default='',blank=True)
+    description = models.TextField(default='')
+    cash_account = models.ForeignKey(ChartSubCategory, on_delete=models.SET_NULL, null=True, verbose_name='Account Name')
+    pay_mode = models.CharField(max_length=50, choices = PAYMENT_MODES, default='Cheque')
+    total_amount = models.FloatField(default=0)
+
+    # class Meta:
+    #     get_latest_by = 'receipt_number'
+
+    def __str__(self):
+        return self.receipt_number
+
+class ReceiptDetails(models.Model):
+    quantity = models.IntegerField(default=1)
+    description = models.TextField(default='')
+    revenue_account = models.ForeignKey(ChartSubCategory, on_delete=models.SET_NULL, null=True, verbose_name='Account Name')
+    unit_price = models.FloatField(default=0)
+    amount = models.FloatField(default=0)
+    receipt_main_id = models.ForeignKey(ReceiptMain, on_delete=models.CASCADE,default=0)
 
 # @receiver(post_save, sender=User)
 # def create_user_profile(sender, instance, created, **kwargs):

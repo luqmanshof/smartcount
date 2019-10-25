@@ -44,7 +44,29 @@ urlpatterns = [
     path('setupinventorycategory/(<int:pk>)/detail',views.SetupInventoryCatDetail.as_view(),name='setupinventorycat_detail'),
     path('setupinventorycategory/(<int:pk>)/delete',views.SetupInventoryCatDelete.as_view(),name='setupinventorycat_delete'),
 
+    path('setupinventoryitems_list',views.setupinventoryitems_list,name='setupinventoryitems_list'),
+    path('setupinventoryitems/(<int:pk>)',views.setupinventoryitems,name='setupinventoryitems'),
+    path('setupinventoryitems/(<int:pk>)/detail',views.SetupInventoryItemsDetail.as_view(),name='setupinventoryitems_detail'),
+    path('setupinventoryitems/(<int:pk>)/delete',views.SetupInventoryItemsDelete.as_view(),name='setupinventoryitems_delete'),
+
+    # SETUP CLIENT
+    path('setupclients_list',views.setupclients_list,name='setupclients_list'),
+    path('setupclients/(<int:pk>)',views.setupclients,name='setupclients'),
+    path('setupclients/(<int:pk>)/detail',views.SetupClientsDetail.as_view(),name='setupclients_detail'),
+    path('setupclients/(<int:pk>)/delete',views.SetupClientsDelete.as_view(),name='setupclients_delete'),
+
+    # SETUP VENDORS
+    path('setupvendors_list',views.setupvendors_list,name='setupvendors_list'),
+    path('setupvendors/(<int:pk>)',views.setupvendors,name='setupvendors'),
+    path('setupvendors/(<int:pk>)/detail',views.SetupVendorsDetail.as_view(),name='setupvendors_detail'),
+    path('setupvendors/(<int:pk>)/delete',views.SetupVendorsDelete.as_view(),name='setupvendors_delete'),
+
+    # RECEIPT
+    path('receipt_list',views.receipt_list,name='receipt_list'),
+    path('receipt/(<int:pk>)',views.receipt,name='receipt'),
+
     # Reports
     path('financialperformance',views.financialperformance,name='financialperformance'),
+    # path('financialperformanceprint',views.financialperformanceprint,name='financialperformanceprint'),
     path('financialposition',views.financialposition,name='financialposition'),
 ]

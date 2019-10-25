@@ -197,8 +197,8 @@
                                       </a>
                                       <ul class="treeview-menu">
                                           <!-- @*<li><a href="#"><i class="fa fa-codepen text-fuchsia"></i> Manage User Account</a></li>*@ -->
-                                          <li><a href="#"><i class="fa fa-codepen text-fuchsia"></i> Clients</a></li>
-                                          <li><a href="#"><i class="fa fa-codepen text-fuchsia"></i> Vendors</a></li>
+                                          <li><a href="{% url 'setupclients_list' %}"><i class="fa fa-codepen text-fuchsia"></i> Clients</a></li>
+                                          <li><a href="{% url 'setupvendors_list' %}"><i class="fa fa-codepen text-fuchsia"></i> Vendors</a></li>
                                           <!-- @*<li><a href="@Url.Action("Index","SetupInsuranceClasses", new { area = "AppSetup" })"><i class="fa fa-codepen text-fuchsia"></i> Insurance Class</a></li>*@ -->
                                           <li class="treeview">
                                               <a href="#">
@@ -209,7 +209,7 @@
                                               </a>
                                               <ul class="treeview-menu">
                                                   <li><a href="{% url 'setupinventorycategory_list' %}"><i class="fa fa-codepen text-fuchsia"></i> Inventory Category</a></li>
-                                                  <li><a href="#"><i class="fa fa-codepen text-fuchsia"></i> Inventory Items</a></li>
+                                                  <li><a href="{% url 'setupinventoryitems_list' %}"><i class="fa fa-codepen text-fuchsia"></i> Inventory Items</a></li>
                                               </ul>
                                           </li>
 
@@ -226,7 +226,7 @@
                                               </ul>
                                           </li>
 
-                                          <li class="treeview">
+                                          <!-- <li class="treeview">
                                               <a href="#">
                                                   <i class="fa fa-codepen text-light-blue"></i> Setup Reports
                                                   <span class="pull-right-container">
@@ -249,7 +249,7 @@
                                                       </ul>
                                                   </li>
                                               </ul>
-                                          </li>
+                                          </li> -->
                                       </ul>
                                   </li>
                                   <li class="treeview">
@@ -260,7 +260,12 @@
                                           </span>
                                       </a>
                                       <ul class="treeview-menu">
-                                          <li class="treeview">
+                                          <li><a href="{% url 'receipt_list' %}"><i class="fa fa-book text-orange"></i> Receipt</a></li>
+                                          <li><a href="#"><i class="fa fa-book text-orange"></i> Expense Voucher</a></li>
+                                          <li><a href="#"><i class="fa fa-book text-orange"></i> Purchase Voucher</a></li>
+                                          <li><a href="#"><i class="fa fa-book text-orange"></i> Journal Entries</a></li>
+
+                                          <!-- <li class="treeview">
                                               <a href="#">
                                                   <i class="fa fa-book text-orange"></i> Receipt
                                                   <span class="pull-right-container">
@@ -311,7 +316,7 @@
                                           </li>
                                           <li class="treeview">
                                               <a href="#">
-                                                  <i class="fa fa-book text-blue"></i> Account Reports
+                                                  <i class="fa fa-book text-blue"></i> Internal Reports
                                                   <span class="pull-right-container">
                                                       <i class="fa fa-angle-left pull-right"></i>
                                                   </span>
@@ -354,7 +359,7 @@
                                                       </ul>
                                                   </li>
                                               </ul>
-                                          </li>
+                                          </li> -->
 
                                       </ul>
                                   </li>
@@ -363,7 +368,7 @@
 
                                   <li class="treeview">
                                       <a href="#">
-                                          <i class="fa fa-edit text-blue"></i> <span>IPSAS</span>
+                                          <i class="fa fa-edit text-blue"></i> <span>IPSAS Reports</span>
                                           <span class="pull-right-container">
                                               <i class="fa fa-angle-left pull-right"></i>
                                           </span>
@@ -381,7 +386,7 @@
 
                                   <li class="header" style="padding-top:0px;"></li>
                                   <li>
-                                      <a href="@Url.Action("CalenderPage","Utility", new { area = "" })">
+                                      <a href="#">
                                           <i class="fa fa-calendar text-maroon"></i> <span>Calendar</span>
                                           <span class="pull-right-container">
                                               <small class="label pull-right bg-red">3</small>
@@ -390,7 +395,7 @@
                                       </a>
                                   </li>
                                   <li>
-                                      <a href="@Url.Action("MailBox","Utility", new { area = "" })">
+                                      <a href="#">
                                           <i class="fa fa-envelope"></i> <span>Mailbox</span>
                                           <span class="pull-right-container">
                                               <small class="label pull-right bg-yellow">12</small>
@@ -449,7 +454,7 @@
 
 </div>
 <!-- /.content-wrapper -->
-<footer class="main-footer">
+<footer class="main-footer no-print">
   <div class="pull-right hidden-xs">
     <b>Version</b> 2.4.0
   </div>
