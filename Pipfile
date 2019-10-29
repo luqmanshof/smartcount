@@ -9,6 +9,7 @@ verify_ssl = true
 django = "*"
 django-filter = "*"
 whitenoise = "*"
+crispy-forms = "*"
 
 [requires]
 python_version = "3.7"
