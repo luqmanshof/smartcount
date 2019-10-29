@@ -18,6 +18,9 @@
     <link rel="stylesheet" href="{% static 'bower_components/font-awesome/css/font-awesome.min.css' %}">
     <!-- Ionicons -->
     <link rel="stylesheet" href="{% static 'bower_components/Ionicons/css/ionicons.min.css' %}">
+    <!-- bootstrap datepicker -->
+    <link rel="stylesheet" href="{% static 'bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css' %}">
+
     <!-- Theme style -->
     <link rel="stylesheet" href="{% static 'dist/css/AdminLTE.min.css' %}">
     <!-- AdminLTE Skins. Choose a skin from the css/skins
@@ -42,6 +45,7 @@
 
         <link href="{% static 'custom.css' %}" rel="stylesheet">
         <link rel="shortcut icon" type="image/png" href="{% static 'myAppImage.ico' %}" />
+
 
 
 </head>
@@ -260,8 +264,8 @@
                                           </span>
                                       </a>
                                       <ul class="treeview-menu">
-                                          <li><a href="{% url 'receipt_list' %}"><i class="fa fa-book text-orange"></i> Receipt</a></li>
-                                          <li><a href="#"><i class="fa fa-book text-orange"></i> Expense Voucher</a></li>
+                                          <li><a href="{% url 'receipt_list' %}"><i class="fa fa-book text-orange"></i> Receipt Module</a></li>
+                                          <li><a href="{% url 'expense_list' %}"><i class="fa fa-book text-orange"></i> Expense Voucher</a></li>
                                           <li><a href="#"><i class="fa fa-book text-orange"></i> Purchase Voucher</a></li>
                                           <li><a href="#"><i class="fa fa-book text-orange"></i> Journal Entries</a></li>
 
@@ -675,6 +679,15 @@
    <script src="{% static 'bower_components/datatables.net/js/jquery.dataTables.min.js' %}"></script>
    <script src="{% static 'bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js' %}"></script>
 
+   <!-- bootstrap datepicker -->
+   <script src="{% static 'bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}"></script>
+
+   <!-- jQuery UI CSS Reference -->
+   <link href="{% static 'content/themes/base/minified/jquery-ui.min.css' %}" rel="stylesheet" />
+   <!-- Required jQuery and jQuery UI Javascript references -->
+   <script src="{% static 'scripts/jquery-3.3.1.min.js' %}"></script>
+   <script src="{% static 'scripts/jquery-ui-1.12.1.min.js' %}"></script>
+
    <script>
        $(function () {
            $('#example1').DataTable({
@@ -690,7 +703,14 @@
 
            //Date range picker
           // $('#reservation').daterangepicker()
+
+           //Date picker
+           $('#datepicker').datepicker({
+            autoclose: true
+           })
+ 
        })
+       
    </script>
 
 </body>

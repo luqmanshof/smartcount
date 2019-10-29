@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_filters',
     'crispy_forms',
     'phone_field',
     'smartapp',
@@ -86,13 +87,12 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'smartcountdb',
-        'USER':'postgres',
-        'PORT':'5432',
-        'PASSWORD':'Password@123',
-        'HOST':'localhost',
-        }
+        'USER': 'postgres',
+        'PORT': '5432',
+        'PASSWORD': 'Password@123',
+        'HOST': 'localhost',
+    }
 }
-
 
 
 # Password validation

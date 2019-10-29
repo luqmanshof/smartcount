@@ -2,7 +2,8 @@ from django.shortcuts import render,redirect,get_object_or_404
 from smartsetup.forms import (
     SignUpForm,EditProfileForm,UserProfileForm,ChartCategoryForm,
     ChartSubCategoryForm,SetupInventoryItemsForm,SetupClientsForm,
-    SetupVendorsForm,ReceiptMainForm,ReceiptDetailsForm
+    SetupVendorsForm,ReceiptMainForm,ReceiptDetailsForm, ExpenseMainForm,
+    ExpenseDetailsForm
 )
 from django.contrib.auth import authenticate,login
 from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
@@ -11,7 +12,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from smartsetup.models import (
     UserProfile,ChartCategory,ChartSubCategory,SetupClients,SetupVendors,
     SetupInventoryCategory,SetupInventoryItems,SetupClients,SetupVendors,
-    ReceiptMain,ReceiptDetails
+    ReceiptMain,ReceiptDetails, ExpenseMain, ExpenseDetails
 )
 from django.forms.models import model_to_dict
 from django.views import generic
@@ -80,6 +81,36 @@ def receipt(request,pk=None):
             }
         return render(request,'account/receipt.html',args)
 
+#EXPENSE TRANSACTION
+@login_required
+def expense_list(request, pk=None):
+    expenses = ExpenseMain.objects
+    fieldCols = ['Date','Expense No.','Description']
+    args ={'fieldCols':fieldCols,'expenses':expenses}
+    return render(request, 'account/expense_list.html',args)
+
+@login_required
+def expense(request,pk=None):
+    if request.method == 'POST':
+        expensemain_form = ExpenseMainForm(request.POST, instance=request.expensemain)
+        expensedetails_form = ExpenseDetailsForm(request.POST, instance=request.expensemain.expensedetails)
+
+        if expensemain_form.is_valid() and receiptdetails_form.is_valid():
+            expensemain_form.save()
+            expensedetails_form.save()
+            # return redirect('home')
+            expenses = ExpenseMain.objects
+            expensedetails = ExpenseMain.ExpenseDetails.objects
+            return render(request, 'account/receipt.html',{'expenses':expenses})
+    else:
+        # receiptmain = request.receiptmain
+        expensemain_form = ExpenseMainForm()
+        # latest_receiptno = ReceiptMain.objects.latest('receipt_number') + 1
+        expensedetails_form = ExpenseDetailsForm()
+        args = {
+            'expensemain_form':expensemain_form,'expensedetails_form':expensedetails_form
+            }
+        return render(request,'account/expense.html',args)
 
 @login_required
 def edit_signup(request):
