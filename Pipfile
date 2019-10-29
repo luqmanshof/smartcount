@@ -8,10 +8,9 @@ verify_ssl = true
 [packages]
 gunicorn = "*"
 psycopg2-binary = "*"
-python = "==3.7.3"
 django = "==2.2.6"
 whitenoise = "*"
-django-crispy-form = "*"
+python = "==3.7.3"
 
 [requires]
 python_version = "3.7"
