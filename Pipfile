@@ -11,6 +11,7 @@ psycopg2-binary = "*"
 python = "==3.7.3"
 django = "==2.2.6"
 whitenoise = "*"
+django-crispy-form = "*"
 
 [requires]
 python_version = "3.7"
