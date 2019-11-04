@@ -2,9 +2,9 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
 from smartsetup.models import (
-    UserProfile, ChartCategory, ChartSubCategory, SetupInventoryItems,
+    UserProfile, ChartCategory, ChartSubCategory, ChartNoteItems, SetupInventoryItems,
     SetupClients, SetupVendors, ReceiptMain, ReceiptDetails, ExpenseMain,
-    ExpenseDetails
+    ExpenseDetails, GJournalMain, GJournalDetails
 )
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from .widgets import BootstrapDateTimePickerInput
@@ -60,10 +60,18 @@ class ChartCategoryForm(forms.ModelForm):
 
 
 class ChartSubCategoryForm(forms.ModelForm):
+    notes = forms.ChoiceField(choices=[(x, x) for x in range(1, 50)])
+
     class Meta:
         model = ChartSubCategory
         fields = ('category_code', 'sub_category_code',
                   'sub_category_name', 'notes')
+
+
+class ChartNoteItemsForm(forms.ModelForm):
+    class Meta:
+        model = ChartNoteItems
+        fields = ('sub_category', 'item_name')
 
 
 class SetupInventoryItemsForm(forms.ModelForm):
@@ -148,3 +156,20 @@ class ExpenseDetailsForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['expense_account'].queryset = ChartSubCategory.objects.filter(
             category_code_id='2')
+
+
+class GJournalMainForm(forms.ModelForm):
+
+    class Meta:
+        model = GJournalMain
+        fields = (
+            'date', 'ref_number', 'description', 'total_debit', 'total_credit'
+        )
+
+
+class GJournalDetailsForm(forms.ModelForm):
+    class Meta:
+        model = GJournalDetails
+        fields = (
+            'description', 'account', 'debit', 'credit', 'journal_main_id'
+        )

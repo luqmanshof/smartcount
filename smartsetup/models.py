@@ -40,6 +40,14 @@ class ChartSubCategory(models.Model):
         return self.sub_category_name
 
 
+class ChartNoteItems(models.Model):
+    sub_category = models.CharField(max_length=256)
+    item_name = models.CharField(max_length=256)
+
+    def __str__(self):
+        return self.item_name
+
+
 class SetupClients(models.Model):
     client_name = models.CharField(max_length=256)
     address = models.TextField()
@@ -101,7 +109,7 @@ class ReceiptMain(models.Model):
     client = models.ForeignKey(SetupClients, on_delete=models.SET_NULL,
                                null=True, blank=True, verbose_name='Client Name')
     bill_to = models.CharField(
-        max_length=256, default='', blank=True, verbose_name='Issued To')
+        max_length=256, default='', blank=True, verbose_name='Received from')
     description = models.TextField(default='')
     cash_account = models.ForeignKey(
         ChartSubCategory, on_delete=models.SET_NULL, null=True, verbose_name='Cash Account')
@@ -131,10 +139,10 @@ class ReceiptDetails(models.Model):
 
 class ExpenseMain(models.Model):
     date = models.DateTimeField(
-        default=timezone.now, blank=True, verbose_name='Receipt Date/Time')
+        default=timezone.now, blank=True, verbose_name='Expense Date/Time')
     voucher_number = models.PositiveIntegerField(default=100)
     payee = models.CharField(max_length=256, default='',
-                             blank=True, verbose_name='Issued To')
+                             blank=True, verbose_name='Payee')
     description = models.TextField(default='')
     cash_account = models.ForeignKey(
         ChartSubCategory, on_delete=models.SET_NULL, null=True, verbose_name='Cash Account')
@@ -158,6 +166,28 @@ class ExpenseDetails(models.Model):
     amount = models.FloatField(default=0)
     expense_main_id = models.ForeignKey(
         ExpenseMain, on_delete=models.CASCADE, default=0)
+
+
+class GJournalMain(models.Model):
+    date = models.DateTimeField(
+        default=timezone.now, blank=True, verbose_name='Date/Time')
+    ref_number = models.PositiveIntegerField(default=100)
+    description = models.CharField(max_length=256, default='')
+    total_debit = models.FloatField(default=0)
+    total_credit = models.FloatField(default=0)
+
+    def __str__(self):
+        return self.ref_number
+
+
+class GJournalDetails(models.Model):
+    description = models.CharField(max_length=256, default='')
+    account = models.ForeignKey(
+        ChartSubCategory, on_delete=models.SET_NULL, null=True)
+    debit = models.FloatField(default=0)
+    credit = models.FloatField(default=0)
+    journal_main_id = models.ForeignKey(
+        GJournalMain, on_delete=models.CASCADE, default=0)
 
 
 # @receiver(post_save, sender=User)

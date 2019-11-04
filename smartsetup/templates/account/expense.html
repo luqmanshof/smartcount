@@ -85,31 +85,18 @@
                                 <!-- <input class="form-control" type="text" name="amount" placeholder="0.00" required> -->
                             </div>
                             <div class="form-group">
-                                {{ expensedetails_form.expense_account|as_crispy_field }}
-                                <!-- <input class="form-control" type="number" name="age" min="10" max="100" placeholder="Age" required> -->
+                                <!-- {{ expensedetails_form.expense_account|as_crispy_field }} -->
+                                <label for="">Expense Account</label>
+                                <select id="revenue" class="form-control">
+                                    {% for item in expense_acct %}
+                                    <option value="{{ item.sub_category_name }}">{{ item.sub_category_name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+
                             </div>
                             <button class="btn btn-primary form-control" type="submit">SUBMIT</button>
                         </form>
-
-                        <!-- <form method="post">
-              {% csrf_token %}
-              <div class="row">
-
-                <div class="col-xs-6 col-md-12">
-                  {{ receiptdetails_form.description|as_crispy_field }}
-                </div>
-
-                <div class="col-xs-6 col-md-4">
-                  {{ receiptdetails_form.amount|as_crispy_field }}
-                </div>
-                <div class="col-xs-12 col-md-8">
-                  {{ receiptdetails_form.revenue_account|as_crispy_field }}
-                </div>
-
-              </div>
-
-              <button type="submit">Add Record</button>
-            </form> -->
 
                     </div>
                 </div>
@@ -130,7 +117,7 @@
                                     {% endfor %}
                                     <th width=50%>Description</th>
                                     <th width=25%>Amount</th>
-                                    <th width=25%>Revenue Account</th>
+                                    <th width=25%>Expense Account</th>
                                 </tr>
 
                             </thead>

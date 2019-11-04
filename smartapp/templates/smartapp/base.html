@@ -7,7 +7,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>SmartCOUNT</title>
+    <!-- <title>SmartCOUNT</title> -->
+    <title>{% block title %}Title{% endblock title %}</title>
 
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -74,7 +75,6 @@
                     <div class="navbar-custom-menu">
                       <ul class="nav navbar-nav">
                         {% if user.is_authenticated %}
-                          <!-- <li class="user" style="color:white">Hello, {{ user.username }}</li> -->
                           <li class="dropdown user user-menu">
                               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                   <img src="{% static 'AppImage.jpg' %}" class="user-image" alt="User Image">
@@ -225,8 +225,9 @@
                                                   </span>
                                               </a>
                                               <ul class="treeview-menu">
-                                                  <li><a href="{% url 'chartcategory_list' %}"><i class="fa fa-codepen text-fuchsia"></i> Account Category</a></li>
-                                                  <li><a href="{% url 'chartsubcategory_list' %}"><i class="fa fa-codepen text-fuchsia"></i> Account Items</a></li>
+                                                  <li><a href="{% url 'chartcategory_list' %}"><i class="fa fa-codepen text-fuchsia"></i> Category</a></li>
+                                                  <li><a href="{% url 'chartsubcategory_list' %}"><i class="fa fa-codepen text-fuchsia"></i> Sub-Category</a></li>
+                                                  <li><a href="{% url 'note_items' %}"><i class="fa fa-codepen text-fuchsia"></i> Note Items</a></li>
                                               </ul>
                                           </li>
 
@@ -683,10 +684,10 @@
    <script src="{% static 'bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}"></script>
 
    <!-- jQuery UI CSS Reference -->
-   <link href="{% static 'content/themes/base/minified/jquery-ui.min.css' %}" rel="stylesheet" />
+   <!-- <link href="{% static 'content/themes/base/minified/jquery-ui.min.css' %}" rel="stylesheet" /> -->
    <!-- Required jQuery and jQuery UI Javascript references -->
-   <script src="{% static 'scripts/jquery-3.3.1.min.js' %}"></script>
-   <script src="{% static 'scripts/jquery-ui-1.12.1.min.js' %}"></script>
+   <!-- <script src="{% static 'scripts/jquery-3.3.1.min.js' %}"></script>
+   <script src="{% static 'scripts/jquery-ui-1.12.1.min.js' %}"></script> -->
 
    <script>
        $(function () {
@@ -713,6 +714,11 @@
        
    </script>
 
+   <!-- <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+   <script src='https://code.jquery.com/jquery-3.2.1.min.js'></script>
+   <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script> -->
+   {% block javascript %}
+   {% endblock javascript%}
 </body>
 
 </html>

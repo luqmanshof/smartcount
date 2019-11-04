@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from . import views
+from . import views, views_ajax
 from django.contrib.admin import AdminSite
 
 # admin.site.site_url = 'localhost'
@@ -41,6 +41,7 @@ urlpatterns = [
     path('chartcategory/(<int:pk>)/delete',
          views.ChartCategoryDelete.as_view(), name='chartcategory_delete'),
 
+    # CHART SUB-CATEGORY
     path('chartsubcategory_list', views.chartsubcategory_list,
          name='chartsubcategory_list'),
     # path('chartsubcategory',views.chartsubcategory,name='chartsubcategory'),
@@ -50,7 +51,9 @@ urlpatterns = [
          views.ChartSubCategoryDetail.as_view(), name='chartsubcategory_detail'),
     path('chartsubcategory/(<int:pk>)/delete',
          views.ChartSubCategoryDelete.as_view(), name='chartsubcategory_delete'),
+    path('ajax/validate_noteno/', views_ajax.ValidateNoteNo, name='validate_noteno'),
 
+    # INVENTORY CATEGORY
     path('setupinventorycategory_list', views.setupinventorycat_list,
          name='setupinventorycategory_list'),
     path('setupinventorycategory/create',
@@ -89,7 +92,9 @@ urlpatterns = [
 
     # RECEIPT
     path('receipt_list', views.receipt_list, name='receipt_list'),
-    path('receipt/(<int:pk>)', views.receipt, name='receipt'),
+    path('receipt_new', views.ReceiptClass.as_view(), name='receipt_new'),
+    path('ajax/crud/create/',  views.CreateCrudUser.as_view(),
+         name='crud_ajax_create'),
 
     # EXPENSES
     path('expense_list', views.expense_list, name='expense_list'),
@@ -100,4 +105,21 @@ urlpatterns = [
          name='financialperformance'),
     # path('financialperformanceprint',views.financialperformanceprint,name='financialperformanceprint'),
     path('financialposition', views.financialposition, name='financialposition'),
+    path('financialcashflow', views.financialcashflow,
+         name='financialcashflow'),
+
+
+    ########### URL Path to Ajax views ######################
+    path('note_items', views_ajax.ChartNoteItem.as_view(), name='note_items'),
+    #     path('note_items/filter/', views_ajax.chartnote_filter,
+    #          name='note_items_filter'),
+    path('note_items/create/',  views_ajax.CreateNoteItem.as_view(),
+         name='note_ajax_create'),
+    path('ajax/note_items/update/',  views_ajax.UpdateNoteItem.as_view(),
+         name='note_ajax_update'),
+    path('ajax/note_items/delete/',  views_ajax.DeleteNoteItem.as_view(),
+         name='note_ajax_delete'),
+
+    path('list_items/filter/', views_ajax.list_filter,
+         name='list_items_filter'),
 ]

@@ -1,23 +1,26 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from smartsetup.forms import (
     SignUpForm,EditProfileForm,UserProfileForm,ChartCategoryForm,
-    ChartSubCategoryForm,SetupInventoryItemsForm,SetupClientsForm,
+    ChartSubCategoryForm,ChartNoteItemsForm,SetupInventoryItemsForm,SetupClientsForm,
     SetupVendorsForm,ReceiptMainForm,ReceiptDetailsForm, ExpenseMainForm,
-    ExpenseDetailsForm
+    ExpenseDetailsForm, GJournalMainForm, GJournalDetailsForm
 )
 from django.contrib.auth import authenticate,login
 from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, permission_required
 from smartsetup.models import (
-    UserProfile,ChartCategory,ChartSubCategory,SetupClients,SetupVendors,
+    UserProfile,ChartCategory,ChartSubCategory,ChartNoteItems,SetupClients,SetupVendors,
     SetupInventoryCategory,SetupInventoryItems,SetupClients,SetupVendors,
-    ReceiptMain,ReceiptDetails, ExpenseMain, ExpenseDetails
+    ReceiptMain,ReceiptDetails, ExpenseMain, ExpenseDetails, GJournalMain, GJournalDetails
 )
 from django.forms.models import model_to_dict
 from django.views import generic
 from django.urls import reverse_lazy
-
+from django.http import JsonResponse
+from django.views.generic import View, ListView
+from django.db.models import Max, PositiveIntegerField, Value
+from django.db.models.functions import Cast, Coalesce
 
 
 @login_required
@@ -49,68 +52,6 @@ def list_signup(request):
     # fields = model_to_dict(user,fields=['username','first_name','last_name','email'])
     fieldCols = ['User Name','First Name','Last Name','E-Mail']
     return render(request, 'smartsetup/list_signup.html',{'fieldCols':fieldCols,'users':users})
-
-#RECEIPT TRANSACTION
-@login_required
-def receipt_list(request, pk=None):
-    receipts = ReceiptMain.objects
-    fieldCols = ['Date','Receipt No.','Description']
-    args ={'fieldCols':fieldCols,'receipts':receipts}
-    return render(request, 'account/receipt_list.html',args)
-
-@login_required
-def receipt(request,pk=None):
-    if request.method == 'POST':
-        receiptmain_form = ReceiptMainForm(request.POST, instance=request.receiptmain)
-        receiptdetails_form = ReceiptDetailsForm(request.POST, instance=request.receiptmain.receiptdetails)
-
-        if receiptmain_form.is_valid() and receiptdetails_form.is_valid():
-            receiptmain_form.save()
-            receiptdetails_form.save()
-            # return redirect('home')
-            receipts = ReceiptMain.objects
-            receiptdetails = ReceiptMain.ReceiptDetails.objects
-            return render(request, 'account/receipt.html',{'receipts':receipts})
-    else:
-        # receiptmain = request.receiptmain
-        receiptmain_form = ReceiptMainForm()
-        # latest_receiptno = ReceiptMain.objects.latest('receipt_number') + 1
-        receiptdetails_form = ReceiptDetailsForm()
-        args = {
-            'receiptmain_form':receiptmain_form,'receiptdetails_form':receiptdetails_form
-            }
-        return render(request,'account/receipt.html',args)
-
-#EXPENSE TRANSACTION
-@login_required
-def expense_list(request, pk=None):
-    expenses = ExpenseMain.objects
-    fieldCols = ['Date','Expense No.','Description']
-    args ={'fieldCols':fieldCols,'expenses':expenses}
-    return render(request, 'account/expense_list.html',args)
-
-@login_required
-def expense(request,pk=None):
-    if request.method == 'POST':
-        expensemain_form = ExpenseMainForm(request.POST, instance=request.expensemain)
-        expensedetails_form = ExpenseDetailsForm(request.POST, instance=request.expensemain.expensedetails)
-
-        if expensemain_form.is_valid() and receiptdetails_form.is_valid():
-            expensemain_form.save()
-            expensedetails_form.save()
-            # return redirect('home')
-            expenses = ExpenseMain.objects
-            expensedetails = ExpenseMain.ExpenseDetails.objects
-            return render(request, 'account/receipt.html',{'expenses':expenses})
-    else:
-        # receiptmain = request.receiptmain
-        expensemain_form = ExpenseMainForm()
-        # latest_receiptno = ReceiptMain.objects.latest('receipt_number') + 1
-        expensedetails_form = ExpenseDetailsForm()
-        args = {
-            'expensemain_form':expensemain_form,'expensedetails_form':expensedetails_form
-            }
-        return render(request,'account/expense.html',args)
 
 @login_required
 def edit_signup(request):
@@ -201,7 +142,7 @@ class ChartCategoryDelete(generic.DeleteView):
     template_name = 'smartsetup/chartcategory_delete.html'
     success_url = reverse_lazy('chartcategory_list')
 
-##SETUP CHART SUB-CATEGORY (ACCOUNT ITEMS)
+##SETUP CHART SUB-CATEGORY
 @login_required
 def chartsubcategory_list(request, pk=None):
     chartcategories = ChartSubCategory.objects
@@ -226,7 +167,7 @@ def chartsubcategory(request, pk=None):
             form = ChartSubCategoryForm(instance=chartsubcategory)
         else:
             form = ChartSubCategoryForm()
-    return render(request,'smartsetup/form.html',{'form':form,'title':'Setup Chart category'})
+    return render(request,'smartsetup/chartsubcategory.html',{'form':form,'title':'Setup Chart category'})
 
 class ChartSubCategoryDetail(generic.DetailView):
     model = ChartSubCategory
@@ -384,6 +325,119 @@ class SetupVendorsDelete(generic.DeleteView):
     success_url = reverse_lazy('setupvendors_list')
 
 
+#RECEIPT TRANSACTION
+@login_required
+def receipt_list(request, pk=None):
+    receipts = ReceiptMain.objects.all()
+    fieldCols = ['Date','Receipt No.','Description']
+    args ={'fieldCols':fieldCols,'receipts':receipts}
+    return render(request, 'account/receipt_list.html',args)
+
+class ReceiptClass(ListView):
+    model = ReceiptDetails
+    template_name = 'account/receipt.html'
+    context_object_name = 'receiptitems'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the Sub Category
+
+
+        context['max_receipt']  = ReceiptMain.objects.aggregate(max_val=Coalesce(Max(Cast('receipt_number', output_field=PositiveIntegerField())), Value(1000)))
+        
+        # context['pay_mode']  = {'mode' : 'Cash','Cheque','Transfer'}
+        # print(context)
+
+        context['client_name'] = SetupClients.objects.all()
+        context['cash_acct'] = ChartSubCategory.objects.filter(category_code_id='3')
+        context['revenue_acct'] = ChartSubCategory.objects.filter(category_code_id='1')
+        # print(context)
+
+        return context
+
+@login_required
+def receipt(request,pk=None):
+    if request.method == 'POST':
+        receiptmain_form = ReceiptMainForm(request.POST)
+        receiptdetails_form = ReceiptDetailsForm(request.POST)
+        
+        if receiptmain_form.is_valid() and receiptdetails_form.is_valid():
+            receiptmain_form.save()
+            receiptdetails_form.save()
+            # return redirect('home')
+            receipts = ReceiptMain.objects
+            receiptdetails = ReceiptMain.ReceiptDetails.objects
+            return render(request, 'account/receipt.html',{'receipts':receipts})
+    else:
+        # receiptmain = request.receiptmain
+        receiptmain_form = ReceiptMainForm()
+        # latest_receiptno = ReceiptMain.objects.latest('receipt_number') + 1
+        receiptdetails_form = ReceiptDetailsForm()
+        # revenue_acct = ChartSubCategory.objects.raw('SELECT  FROM smartsetup_chartsubcategory WHERE category_code_id=1')
+        revenue_acct = ChartSubCategory.objects.filter(category_code_id='1')
+
+        args = {
+            'receiptmain_form':receiptmain_form,'receiptdetails_form':receiptdetails_form,
+            'revenue_acct':revenue_acct
+            }
+        return render(request,'account/receipt.html',args)
+
+# Create and Read User Django Ajax
+class CreateCrudUser(View):
+    def get(self, request):
+        name1 = request.GET.get('name', None)
+        address1 = request.GET.get('address', None)
+        age1 = request.GET.get('age', None)
+
+        obj = CrudUser.objects.create(
+            name=name1,
+            address=address1,
+            age=age1
+        )
+
+        user = {'id': obj.id, 'name': obj.name,
+                'address': obj.address, 'age': obj.age}
+
+        data = {
+            'user': user
+        }
+        return JsonResponse(data)
+
+#EXPENSE TRANSACTION
+@login_required
+def expense_list(request, pk=None):
+    expenses = ExpenseMain.objects
+    fieldCols = ['Date','Expense No.','Description']
+    args ={'fieldCols':fieldCols,'expenses':expenses}
+    return render(request, 'account/expense_list.html',args)
+
+@login_required
+def expense(request,pk=None):
+    if request.method == 'POST':
+        expensemain_form = ExpenseMainForm(request.POST, instance=request.expensemain)
+        expensedetails_form = ExpenseDetailsForm(request.POST, instance=request.expensemain.expensedetails)
+
+        if expensemain_form.is_valid() and expensedetails_form.is_valid():
+            expensemain_form.save()
+            expensedetails_form.save()
+            # return redirect('home')
+            expenses = ExpenseMain.objects
+            expensedetails = ExpenseMain.ExpenseDetails.objects
+            return render(request, 'account/receipt.html',{'expenses':expenses})
+    else:
+        # receiptmain = request.receiptmain
+        expensemain_form = ExpenseMainForm()
+        # latest_receiptno = ReceiptMain.objects.latest('receipt_number') + 1
+        expensedetails_form = ExpenseDetailsForm()
+        expense_acct = ChartSubCategory.objects.filter(category_code_id='2')
+        args = {
+            'expensemain_form':expensemain_form,'expensedetails_form':expensedetails_form,
+            'expense_acct':expense_acct
+            }
+        return render(request,'account/expense.html',args)
+
+
 
 #REPORTS
 @login_required
@@ -412,3 +466,11 @@ def financialposition(request, pk=None):
     args = {'curr_assets':curr_assets,'curr_liabilities':curr_liabilities,
             'noncurr_assets':noncurr_assets,'noncurr_liabilities':noncurr_liabilities}
     return render (request, 'smartsetup/financialposition.html',args)
+
+@login_required
+def financialcashflow(request):
+    revenues = ChartSubCategory.objects.filter(category_code_id=1)
+    expenses = ChartSubCategory.objects.filter(category_code_id=2)
+
+    args = {'revenues':revenues,'expenses':expenses}
+    return render (request, 'smartsetup/financialcashflow.html',args)

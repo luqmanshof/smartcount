@@ -1,6 +1,4 @@
 {% extends 'smartapp/base.html' %}
-{% load crispy_forms_tags %}
-
 
 {% block content %}
 <section class="content-header">
@@ -15,59 +13,70 @@
   <div class="box box-primary col-xs-12">
     <div class="box-body" style="padding-top:15px">
       <div class="col-xs-12">
-        <form method="post">
+        <form id="receiptMainForm">
           {% csrf_token %}
           <div class="row">
-            <!-- <div class="input-group date col-xs-6 col-md-3">
-              <div class="input-group-addon">
-                <i class="fa fa-calendar"></i>
-              </div>
-              <input type="text" class="form-control pull-right" id="datepicker">
-            </div> -->
-            <div class="col-xs-6 col-md-2">
-              {{ receiptmain_form.date|as_crispy_field }}
+            <div class="col-xs-6 col-md-2 form-group">
+              <label for="">Receipt Date</label>
+              <input class="form-control" type="date" onload="getDate()" name="receipt_date" id="date" required>
             </div>
 
-            <div class="col-xs-6 col-md-2">
-              {{ receiptmain_form.receipt_number|as_crispy_field }}
+            <div class="col-xs-6 col-md-2 form-group">
+              <label for="">Receipt Number</label>
+              <input class="form-control" type="text" name="receipt_number" value="{{max_receipt.max_val|add:1}}"
+                required>
             </div>
-            <div class="col-xs-12 col-md-4">
-              {{ receiptmain_form.client|as_crispy_field }}
+            <div class="col-xs-12 col-md-4 form-group">
+              <label for="">Client Name</label>
+              <select name="client_name" id="client" class="form-control">
+                {% for item in client_name %}
+                <option value="{{ item.client_name }}">{{ item.client_name }}
+                </option>
+                {% endfor %}
+              </select>
             </div>
-            <div class="col-xs-12 col-md-4">
-              {{ receiptmain_form.bill_to|as_crispy_field }}
+            <div class="col-xs-12 col-md-4 form-group">
+              <label for="">Received From:</label>
+              <input class="form-control" type="text" name="bill_to" id="bill_to" placeholder="Name" required>
             </div>
           </div>
 
           <div class="row">
-            <div class="col-xs-12 col-md-4">
-              {{ receiptmain_form.cash_account|as_crispy_field }}
+            <div class="col-xs-12 col-md-4 form-group">
+              <label for="">Cash Account</label>
+              <select name="cash_account" id="cash" class="form-control">
+                {% for item in cash_acct %}
+                <option value="{{ item.sub_category_code }}">{{ item.sub_category_name }}
+                </option>
+                {% endfor %}
+              </select>
             </div>
-            <div class="col-xs-12 col-md-4">
-              {{ receiptmain_form.pay_mode|as_crispy_field }}
+            <div class="col-xs-12 col-md-4 form-group">
+              <label for="">Payment Mode</label>
+              <select name="pay_mode" id="client" class="form-control">
+                <option value="Cash">Cash</option>
+                <option value="Cash">Cheque</option>
+                <option value="Cash">Transfer</option>
+              </select>
             </div>
-            <div class="col-xs-12 col-md-4">
-              {{ receiptmain_form.total_amount|as_crispy_field }}
+            <div class="col-xs-12 col-md-4 form-group">
+              <label for="">Received From:</label>
+              <input class="form-control" type="text" name="total_amount" placeholder="0.00" required>
             </div>
           </div>
 
-          <!-- {{ receiptmain_form|crispy }}
-                  {{ receiptdetails_form|crispy }} -->
+          <!-- <button type="submit">Save</button> -->
+          <!-- </form> -->
+          <!-- <p>Latest Receipt: {{ latest_receiptno }}</p> -->
 
-          <button type="submit">Save</button>
-        </form>
-        <!-- <p>Latest Receipt: {{ latest_receiptno }}</p> -->
-
-        <!-- <br> -->
+          <!-- <br> -->
 
       </div>
     </div>
 
   </div>
 
-</section>
 
-<section style="margin-top:0px">
   <div class="box box-primary col-xs-12">
 
     <div class="box-body">
@@ -77,41 +86,26 @@
         <div class="box">
           <div class="box-body">
             <!-- <h3>ADD USER</h3> -->
-            <form id="addUser" action="">
-              <div class="form-group">
-                {{ receiptdetails_form.description|as_crispy_field }}
-                <!-- <input class="form-control" type="text" name="description" placeholder="description" required> -->
-              </div>
-              <div class="form-group">
-                {{ receiptdetails_form.amount|as_crispy_field }}
-                <!-- <input class="form-control" type="text" name="amount" placeholder="0.00" required> -->
-              </div>
-              <div class="form-group">
-                {{ receiptdetails_form.revenue_account|as_crispy_field }}
-                <!-- <input class="form-control" type="number" name="age" min="10" max="100" placeholder="Age" required> -->
-              </div>
-              <button class="btn btn-primary form-control" type="submit">SUBMIT</button>
+            <!-- <form id="receiptSub" action=""> -->
+            <!-- {% csrf_token %} -->
+            <div class="form-group">
+              <input class="form-control" type="text" name="description" placeholder="description" required>
+            </div>
+            <div class="form-group">
+              <input class="form-control" type="text" name="amount" placeholder="0.00" required>
+            </div>
+            <div class="form-group">
+              <label for="">Revenue Account</label>
+              <select name="revenue_account" id="revenue" class="form-control">
+                {% for item in revenue_acct %}
+                <option value="{{ item.sub_category_name }}">{{ item.sub_category_name }}
+                </option>
+                {% endfor %}
+              </select>
+              <!-- <input class="form-control" type="number" name="age" min="10" max="100" placeholder="Age" required> -->
+            </div>
+            <button class="btn btn-primary form-control" type="submit">SUBMIT</button>
             </form>
-
-            <!-- <form method="post">
-              {% csrf_token %}
-              <div class="row">
-
-                <div class="col-xs-6 col-md-12">
-                  {{ receiptdetails_form.description|as_crispy_field }}
-                </div>
-
-                <div class="col-xs-6 col-md-4">
-                  {{ receiptdetails_form.amount|as_crispy_field }}
-                </div>
-                <div class="col-xs-12 col-md-8">
-                  {{ receiptdetails_form.revenue_account|as_crispy_field }}
-                </div>
-
-              </div>
-
-              <button type="submit">Add Record</button>
-            </form> -->
 
           </div>
         </div>
@@ -124,48 +118,37 @@
         <!-- /.box -->
         <div class="box">
           <div class="box-body">
-            <table id="example2" class="table table-bordered table-striped">
-              <thead>
-                <tr>
-                  {% for fieldCol in fieldCols %}
-                  <th>{{ fieldCol }}</th>
-                  {% endfor %}
-                  <th width=50%>Description</th>
-                  <th width=25%>Amount</th>
-                  <th width=25%>Revenue Account</th>
-                </tr>
-
-              </thead>
-              <tbody>
-                {% for field, value in fields.Items %}
-                <tr>
-                  <!-- {% for value in users.Items %} -->
-                  <td>
-                    {{ value }}
-                  </td>
-                  <!-- {% endfor %} -->
-
-                  <td style="text-align:left">
-                    <a href="{% url 'edit_signup_with_pk' pk=user.pk %}" class="fa fa-edit text-green"> Edit</a> |
-                    <a href="#" class="fa fa-trash text-red"> Delete</a>
-                  </td>
-                </tr>
-                {% endfor %}
-
-              </tbody>
-              <tfoot>
-                <tr>
-                  {% for field in fields %}
-                  <th>{{ field }}</th>
-                  {% endfor %}
-                  <!-- <th>Event/Actions</th> -->
-                </tr>
-
-              </tfoot>
+            <table id="itemTable" class="table table-striped">
+              <tr>
+                <th>Description</th>
+                <th>Revenue Account</th>
+                <th colspan="3">Amount</th>
+              </tr>
+              {% if noteitems %}
+              {% for item in noteitems %}
+              <tr id="item-{{item.id}}">
+                <td class="itemCategory itemData" name="category">{{item.sub_category}}</td>
+                <td class="itemCategory itemData" name="category">{{item.sub_category}}</td>
+                <td class="itemName itemData" name="item_name">{{item.item_name}}</td>
+                <td align="center">
+                  <button class="btn btn-success form-control" onClick="editItem({{item.id}})" data-toggle="modal"
+                    data-target="#myModal" )">EDIT</button>
+                </td>
+                <td align="center">
+                  <button class="btn btn-danger form-control" onClick="deleteItem({{item.id}})">DELETE</button>
+                </td>
+              </tr>
+              {% endfor %}
+              {% else %}
+              <!-- No Item Listed -->
+              {% endif %}
             </table>
           </div>
           <!-- /.box-body -->
         </div>
+
+        <label for="">...</label>
+
         <!-- /.box -->
       </div>
       <!-- /.col -->
@@ -178,8 +161,38 @@
   </div>
 
 </section>
+{% endblock %}
 
-<script type="text/javascript">
+{% block javascript %}
+<script>
+  var revenueInput;
+  $(document).ready(function () {
+    $("select#revenue").change(function () {
+      revenueInput = $(this).children("option:selected").val();
+      //alert("You have selected the Account - " + revenueInput);
+    });
+
+
+    $('#client, #cash, #revenue, #paymode').val('');
+  });
+
+
+  // Create Django Ajax Call
+  $("#receiptMainForm").submit(function () {
+    alert("It is working...");
+
+    var trans_date = $('input[name="receipt_date"]').val().trim();
+    var amountInput = $('input[name="receipt_number"]').val().trim();
+    console.log(trans_date);
+    console.log(amountInput);
+
+
+  });
+
+  $('#client').change(function () {
+    $('#bill_to').val($(this).val());
+  });
+
   $(function () {
     $(".select-placeholder").prepend("<option value='' disabled selected>Select an option...</option>");
     // This will make every element with the class "date-picker" into a DatePicker element
