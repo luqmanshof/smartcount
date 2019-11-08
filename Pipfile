@@ -12,5 +12,3 @@ django = "==2.2.6"
 whitenoise = "*"
 python = "==3.7.3"
 
-[requires]
-python_version = "3.7"
