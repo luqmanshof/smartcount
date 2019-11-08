@@ -4,10 +4,10 @@ from django.shortcuts import render
 from django.views.generic import ListView
 from .models import ChartNoteItems, ChartSubCategory
 from django.views.generic import View
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.core import serializers
 from django.forms.models import model_to_dict
-import json
+import json as simplejson
 
 
 class ChartNoteItem(ListView):
@@ -21,6 +21,7 @@ class ChartNoteItem(ListView):
         # Add in a QuerySet of all the Sub Category
         context['sub_category'] = ChartSubCategory.objects.all().order_by(
             'sub_category_name')
+
         return context
 
 
@@ -29,6 +30,8 @@ class CreateNoteItem(View):
 
         name1 = request.GET.get('item_name', None)
         revenue1 = request.GET.get('sub_category', None)
+
+        print(revenue1)
 
         obj = ChartNoteItems.objects.create(
             item_name=name1,
@@ -129,3 +132,28 @@ def ValidateNoteNo(request):
         'is_taken': ChartSubCategory.objects.filter(notes__iexact=notes).exists()
     }
     return JsonResponse(data)
+
+
+def populate_noteitems(request):
+    if request.method == 'GET' and request.is_ajax():
+        category = request.GET.get('sub_category', None)
+
+        # print('Selected Category Key is: ', category)
+
+        result_set = []
+        selected_items = []
+
+        selected_category = ChartSubCategory.objects.get(
+            sub_category_code=category)
+        selected_items = selected_category.noteitems.all()
+        # print('Selected Note Items are: ', selected_items)
+
+        for item in selected_items:
+            # print('Item Name: ', item.item_name)
+            # print('Item ID: ', item.id)
+            result_set.append({'item': item.item_name, 'itemID': item.id})
+
+        return HttpResponse(simplejson.dumps(result_set), content_type='application/json')
+
+    else:
+        return redirect('/')

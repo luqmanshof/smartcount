@@ -21,6 +21,8 @@ from django.http import JsonResponse
 from django.views.generic import View, ListView
 from django.db.models import Max, PositiveIntegerField, Value
 from django.db.models.functions import Cast, Coalesce
+from django.utils import timezone
+from django.core import serializers
 
 
 @login_required
@@ -177,6 +179,39 @@ class ChartSubCategoryDelete(generic.DeleteView):
     model = ChartSubCategory
     template_name = 'smartsetup/chartsubcategory_delete.html'
     success_url = reverse_lazy('chartsubcategory_list')
+
+##SETUP CHART NOTE-ITEMS
+@login_required
+def chartnoteitems_list(request, pk=None):
+    chartnoteitems = ChartNoteItems.objects.all().order_by('sub_category')
+    fieldCols = ['Category','Account Item']
+    args ={'fieldCols':fieldCols,'chartnoteitems':chartnoteitems}
+    return render(request, 'smartsetup/chartnoteitems_list.html',args)
+
+@login_required
+def chartnoteitems(request, pk=None):
+    if request.method == 'POST':
+        if pk:
+            chartnoteitems = ChartNoteItems.objects.get(pk=pk)
+            form = ChartNoteItemsForm(request.POST, instance=chartnoteitems)
+        else:
+            form = ChartNoteItemsForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('chartnoteitems_list')
+    else:
+        if (pk != 0):
+            chartnoteitems = ChartNoteItems.objects.get(pk=pk)
+            form = ChartNoteItemsForm(instance=chartnoteitems)
+        else:
+            form = ChartNoteItemsForm()
+    return render(request,'smartsetup/form.html',{'form':form,'title':'Setup Account Notes'})
+
+class ChartNoteItemsDelete(generic.DeleteView):
+    model = ChartNoteItems
+    template_name = 'smartsetup/chartnoteitems_delete.html'
+    success_url = reverse_lazy('chartnoteitems_list')
+
 
 #SETUP INVENTORY CATEGORY
 @login_required
@@ -336,6 +371,7 @@ def receipt_list(request, pk=None):
 class ReceiptClass(ListView):
     model = ReceiptDetails
     template_name = 'account/receipt.html'
+    # template_name = 'account/receipt_Sample.html'
     context_object_name = 'receiptitems'
 
     def get_context_data(self, **kwargs):
@@ -345,10 +381,6 @@ class ReceiptClass(ListView):
 
 
         context['max_receipt']  = ReceiptMain.objects.aggregate(max_val=Coalesce(Max(Cast('receipt_number', output_field=PositiveIntegerField())), Value(1000)))
-        
-        # context['pay_mode']  = {'mode' : 'Cash','Cheque','Transfer'}
-        # print(context)
-
         context['client_name'] = SetupClients.objects.all()
         context['cash_acct'] = ChartSubCategory.objects.filter(category_code_id='3')
         context['revenue_acct'] = ChartSubCategory.objects.filter(category_code_id='1')
@@ -356,48 +388,64 @@ class ReceiptClass(ListView):
 
         return context
 
-@login_required
-def receipt(request,pk=None):
-    if request.method == 'POST':
-        receiptmain_form = ReceiptMainForm(request.POST)
-        receiptdetails_form = ReceiptDetailsForm(request.POST)
-        
-        if receiptmain_form.is_valid() and receiptdetails_form.is_valid():
-            receiptmain_form.save()
-            receiptdetails_form.save()
-            # return redirect('home')
-            receipts = ReceiptMain.objects
-            receiptdetails = ReceiptMain.ReceiptDetails.objects
-            return render(request, 'account/receipt.html',{'receipts':receipts})
-    else:
-        # receiptmain = request.receiptmain
-        receiptmain_form = ReceiptMainForm()
-        # latest_receiptno = ReceiptMain.objects.latest('receipt_number') + 1
-        receiptdetails_form = ReceiptDetailsForm()
-        # revenue_acct = ChartSubCategory.objects.raw('SELECT  FROM smartsetup_chartsubcategory WHERE category_code_id=1')
-        revenue_acct = ChartSubCategory.objects.filter(category_code_id='1')
-
-        args = {
-            'receiptmain_form':receiptmain_form,'receiptdetails_form':receiptdetails_form,
-            'revenue_acct':revenue_acct
-            }
-        return render(request,'account/receipt.html',args)
 
 # Create and Read User Django Ajax
-class CreateCrudUser(View):
+class CreateReceipt(View):
+    # print('receipt AJAX VIEW ')
     def get(self, request):
-        name1 = request.GET.get('name', None)
-        address1 = request.GET.get('address', None)
-        age1 = request.GET.get('age', None)
+        print('receipt def AJAX VIEW ')
 
-        obj = CrudUser.objects.create(
-            name=name1,
-            address=address1,
-            age=age1
-        )
+        receipt_date1 = request.GET.get('receipt_date', None)
+        receipt_number1 = request.GET.get('receipt_number', None)
+        client_name1 = request.GET.get('client_name', None)
+        bill_to1 = request.GET.get('bill_to', None)
+        cash_account1 = request.GET.get('cash_account', None)
+        Debit_account1 = request.GET.get('Debit_account', None)
+        pkMain = request.GET.get('mainID', None)
 
-        user = {'id': obj.id, 'name': obj.name,
-                'address': obj.address, 'age': obj.age}
+        print('receipt_date1 : ',receipt_date1)
+        print('receipt_number1 : ',receipt_number1)
+        print('client_name1 : ',client_name1)
+        print('bill_to1 : ',bill_to1)
+        print('cash_account1 : ',cash_account1)
+        print('Debit_account1 : ',Debit_account1)
+        print('pkMain : ',pkMain)
+        
+
+        if pkMain:
+            print('UPDATE EXISTING RECORD ')
+            obj = ReceiptMain.objects.get(id=pkMain)
+            obj.date = receipt_date1
+            obj.receipt_number = receipt_number1
+            obj.client = SetupClients.objects.get(id = client_name1)
+            obj.bill_to = bill_to1
+            obj.cash_account = cash_account1
+            obj.Debit_account = Debit_account1
+
+            obj.save()
+        
+        else:
+            print('CLIENT SELECTED : ',SetupClients.objects.get(id = client_name1))
+            print('BEFORE : ',receipt_date1)
+            ClientID = SetupClients.objects.get(id = client_name1).id
+            print('RETRIEVED CLIENT INFO:  ' , ClientID)
+
+            obj = ReceiptMain.objects.create(
+                date = receipt_date1,
+                receipt_number = receipt_number1,
+                client_id = ClientID,
+                # client = serializers.serialize('json',SetupClients.objects.get(id = client_name1)),
+                bill_to = bill_to1,
+                cash_account = ChartSubCategory.objects.get(sub_category_code = cash_account1),
+                # Debit_account = chartnoteitems.objects.get(pk = Debit_account1),
+            )
+
+            print('OBJECT CREATED')
+
+        
+
+        user = {'id': obj.id, 'date': obj.date, 'receipt_number': obj.receipt_number, 
+                'bill_to': obj.bill_to}
 
         data = {
             'user': user

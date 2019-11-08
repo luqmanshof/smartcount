@@ -41,7 +41,9 @@ class ChartSubCategory(models.Model):
 
 
 class ChartNoteItems(models.Model):
-    sub_category = models.CharField(max_length=256)
+    # sub_category = models.CharField(max_length=256)
+    sub_category = models.ForeignKey(
+        ChartSubCategory, on_delete=models.CASCADE, default='', related_name='noteitems')
     item_name = models.CharField(max_length=256)
 
     def __str__(self):
@@ -103,8 +105,7 @@ PAYMENT_MODES = (
 
 
 class ReceiptMain(models.Model):
-    date = models.DateTimeField(
-        default=timezone.now, blank=True, verbose_name='Receipt Date/Time')
+    date = models.DateTimeField(verbose_name='Receipt Date/Time')
     receipt_number = models.PositiveIntegerField(default=100)
     client = models.ForeignKey(SetupClients, on_delete=models.SET_NULL,
                                null=True, blank=True, verbose_name='Client Name')
@@ -113,6 +114,8 @@ class ReceiptMain(models.Model):
     description = models.TextField(default='')
     cash_account = models.ForeignKey(
         ChartSubCategory, on_delete=models.SET_NULL, null=True, verbose_name='Cash Account')
+    Debit_account = models.ForeignKey(
+        ChartNoteItems, on_delete=models.SET_NULL, null=True)
     pay_mode = models.CharField(
         max_length=50, choices=PAYMENT_MODES, default='Cheque')
     total_amount = models.FloatField(default=0)
@@ -129,6 +132,8 @@ class ReceiptDetails(models.Model):
     description = models.CharField(max_length=256, default='')
     revenue_account = models.ForeignKey(
         ChartSubCategory, on_delete=models.SET_NULL, null=True, verbose_name='Revenue Account')
+    credit_account = models.ForeignKey(
+        ChartNoteItems, on_delete=models.SET_NULL, null=True)
     unit_price = models.FloatField(default=0)
     amount = models.FloatField(default=0)
     receipt_main_id = models.ForeignKey(

@@ -100,7 +100,7 @@ class ReceiptMainForm(forms.ModelForm):
         model = ReceiptMain
         fields = (
             'date', 'receipt_number', 'client', 'bill_to',
-            'cash_account', 'pay_mode', 'total_amount'
+            'cash_account', 'Debit_account', 'pay_mode', 'total_amount'
         )
 
     def __init__(self, *args, **kwargs):
@@ -116,7 +116,7 @@ class ReceiptDetailsForm(forms.ModelForm):
     class Meta:
         model = ReceiptDetails
         fields = (
-            'quantity', 'description', 'revenue_account', 'unit_price',
+            'quantity', 'description', 'revenue_account', 'credit_account', 'unit_price',
             'amount', 'receipt_main_id'
         )
 

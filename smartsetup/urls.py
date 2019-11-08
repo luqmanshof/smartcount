@@ -53,6 +53,15 @@ urlpatterns = [
          views.ChartSubCategoryDelete.as_view(), name='chartsubcategory_delete'),
     path('ajax/validate_noteno/', views_ajax.ValidateNoteNo, name='validate_noteno'),
 
+
+    # CHART NOTE-ITEMS
+    path('chartnoteitems_list', views.chartnoteitems_list,
+         name='chartnoteitems_list'),
+    path('chartnoteitems/(<int:pk>)',
+         views.chartnoteitems, name='chartnoteitems'),
+    path('chartnoteitems/(<int:pk>)/delete',
+         views.ChartNoteItemsDelete.as_view(), name='chartnoteitems_delete'),
+
     # INVENTORY CATEGORY
     path('setupinventorycategory_list', views.setupinventorycat_list,
          name='setupinventorycategory_list'),
@@ -93,8 +102,8 @@ urlpatterns = [
     # RECEIPT
     path('receipt_list', views.receipt_list, name='receipt_list'),
     path('receipt_new', views.ReceiptClass.as_view(), name='receipt_new'),
-    path('ajax/crud/create/',  views.CreateCrudUser.as_view(),
-         name='crud_ajax_create'),
+    path('ajax/receipt/create/',  views.CreateReceipt.as_view(),
+         name='receipt_ajax_create'),
 
     # EXPENSES
     path('expense_list', views.expense_list, name='expense_list'),
@@ -122,4 +131,7 @@ urlpatterns = [
 
     path('list_items/filter/', views_ajax.list_filter,
          name='list_items_filter'),
+
+    path('note_items/populate/',  views_ajax.populate_noteitems,
+         name='populate_noteitems'),
 ]

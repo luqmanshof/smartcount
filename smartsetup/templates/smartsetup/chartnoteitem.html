@@ -27,7 +27,7 @@
                                 <label for="">Main Account</label>
                                 <select name="sub_category" id="revenue" class="form-control">
                                     {% for item in sub_category %}
-                                    <option value="{{ item.sub_category_name }}">{{ item.sub_category_name }}
+                                    <option value="{{ item.sub_category_code }}">{{ item.sub_category_name }}
                                     </option>
                                     {% endfor %}
                                 </select>
@@ -98,7 +98,7 @@
                     <label for="">Main Account</label>
                     <select name="sub_category2" id="form-revenue" class="form-control">
                         {% for item in sub_category %}
-                        <option value="{{ item.sub_category_name }}">{{ item.sub_category_name }}
+                        <option value="{{ item.sub_category_code }}">{{ item.sub_category_name }}
                         </option>
                         {% endfor %}
                     </select>
@@ -189,7 +189,10 @@
 
     // Create Django Ajax Call
     $("form#addItem").submit(function () {
+        //alert("it's working...")
         var nameInput = $('input[name="item_name"]').val().trim();
+
+        console.log(nameInput)
 
         if (nameInput && revenueInput) {
             // Create Ajax Call
